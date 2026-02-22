@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Landing Page Intro</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Space+Grotesk:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- Splash Screen -->
+    <div id="splash">
+        <video id="introVideo" autoplay muted playsinline>
+            <source src="nike2.mp4" type="video/mp4" />
+        </video>
+    </div>
+
+    <div id="scroll-wrapper">
+        <main id="main" class="hero">
+            <!-- VIDEO (BOTTOM LAYER) -->
+            <video id="bgVideo" autoplay muted loop playsinline>
+                <source src="reveal.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+
+            <!-- UI CONTENT ABOVE -->
+            <div class="nav">
+                <a href="#main" class="nav-link">Home</a>
+                <a href="#storySection" class="nav-link">Story</a>
+                <a href="#gallerySection" class="nav-link">Gallery</a>
+                <a href="#archiveSection" class="nav-link">Archive</a>
+                <a href="#teamSection" class="nav-link">Our Team</a>
+                <a href="#liquidFooter" class="nav-link">Contact</a>
+            </div>
+
+            <div class="center-content">
+                <p class="subtitle">WE BELIEVE IN CREATIVITY AND TRANSPARENCY</p>
+                <p class="cta">COME TO PLAY</p>
+            </div>
+
+            <h1 class="title">EXPLORE NOTHING</h1>
+
+            <img src="img1.jpg" class="float-img img1">
+            <img src="img2.jpg" class="float-img img2">
+            <img src="img3.jpg" class="float-img img3">
+            <img src="img4.jpg" class="float-img img4">
+            <img src="img5.jpg" class="float-img img5">
+
+            <div class="hint">SCRATCH TO REVEAL</div>
+            <canvas id="scratchCanvas"></canvas>
+        </main>
+
+        <section id="storySection" class="section2 editorial-section">
+            <div class="content-wrapper">
+                <div class="split-layout">
+                    <div class="left-col">
+                        <p class="editorial-text">
+                            <span class="reveal-line"><span>NIKE DESIGN IS</span></span>
+                            <span class="reveal-line"><span>UNAPOLOGETICALLY <span
+                                        class="highlight bold">BOLD</span></span></span>
+                            <span class="reveal-line"><span>DRIVEN BY A <span class="accent">rebellious</span>
+                                    SPIRIT</span></span>
+                            <span class="reveal-line"><span>THAT THRIVES ON BEING</span></span>
+                            <span class="reveal-line"><span><span class="highlight-line">DIFFERENT.</span> WE ARE
+                                    DOERS,</span></span>
+                            <span class="reveal-line"><span>THINKERS, AND DISRUPTORS,</span></span>
+                            <span class="reveal-line"><span>NEVER AFRAID TO TAKE</span></span>
+                            <span class="reveal-line"><span><span class="highlight red-circle">RISKS</span> AND <span
+                                        class="highlight underline">PUSH THE LIMITS.</span></span></span>
+                        </p>
+                        <div class="editorial-footer">
+                            <span>UNAPOLOGETICALLY BOLD</span>
+                            <span>BEAVERTON — OR</span>
+                        </div>
+                    </div>
+                    <div class="right-col">
+                        <div class="tilt-frame">
+                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop"
+                                alt="Hero Product" class="tilt-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INFINITE SCROLLER: NIKE -->
+        <section class="infinite-scroll-section">
+            <div class="scroll-track">
+                <div class="scroll-content">
+                    <span class="scroll-text">NIKE</span>
+                    <span class="scroll-text">NIKE</span>
+                    <span class="scroll-text">NIKE</span>
+                    <span class="scroll-text">NIKE</span>
+                    <span class="scroll-text">NIKE</span>
+                    <span class="scroll-text">NIKE</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: SCROLL-CONTROLLED IMAGE SEQUENCE -->
+        <section id="sequenceSection" class="section3 image-sequence-section">
+            <div class="sequence-container">
+                <div class="sequence-title">SCROLL TO REVEAL</div>
+                <canvas id="sequenceCanvas"></canvas>
+                <div class="sequence-info">Scroll to animate • Fully reversible</div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: HORIZONTAL SHOE GALLERY -->
+        <section id="gallerySection" class="section4 shoe-gallery-section">
+            <div class="gallery-wrapper">
+                <div class="gallery-info left-info">
+                    <div class="info-content">
+                        <h3 class="shoe-name">Air Max 90</h3>
+                        <p class="shoe-tagline">Classic Evolution</p>
+                        <p class="shoe-description">The legendary comfort and style that started it all. Premium materials meet timeless design.</p>
+                        <button class="explore-btn">EXPLORE</button>
+                    </div>
+                </div>
+
+                <div class="gallery-carousel">
+                    <div class="gallery-track">
+                        <div class="shoe-item" data-shoe="Nike CR1" data-tagline="Limited Edition" data-desc="Exclusive limited edition with premium craftsmanship. Advanced cushioning technology for ultimate comfort.">
+                            <img src="cr1.jpeg" alt="Nike CR1">
+                        </div>
+                        <div class="shoe-item" data-shoe="Nike CR2" data-tagline="Performance Elite" data-desc="Built for peak performance. Enhanced durability meets cutting-edge design innovation.">
+                            <img src="cr2.jpeg" alt="Nike CR2">
+                        </div>
+                        <div class="shoe-item" data-shoe="Nike CR3" data-tagline="Urban Legend" data-desc="Street culture meets high fashion. Bold statement piece for the modern rebel.">
+                            <img src="cr3.jpeg" alt="Nike CR3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-info right-info">
+                    <div class="info-content">
+                        <p class="shoe-number">01 / 05</p>
+                        <p class="shoe-price">$119.99</p>
+                        <div class="shoe-specs">
+                            <span class="spec-item">Cushioning</span>
+                            <span class="spec-item">Heritage</span>
+                            <span class="spec-item">Durable</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-scroll-hint">Scroll to explore</div>
+        </section>
+
+        <!-- SECTION 5: DRAGGABLE INFINITE CIRCULAR GALLERY -->
+        <section id="archiveSection" class="section5 circular-gallery-section">
+            <div class="circular-gallery-header">
+                <p class="circular-kicker">SECTION 05</p>
+                <h2 class="circular-title">DRAG TO ROTATE THE ARCHIVE</h2>
+                <p class="circular-subtitle">Infinite circular gallery with momentum. Drag or swipe to explore.</p>
+            </div>
+
+            <div class="circular-gallery-stage" id="circularGallery">
+                <div class="circular-gallery-ring">
+                    <article class="circular-card"><img src="cr1.jpeg" alt="Nike CR1"><span>Nike CR1</span></article>
+                    <article class="circular-card"><img src="cr2.jpeg" alt="Nike CR2"><span>Nike CR2</span></article>
+                    <article class="circular-card"><img src="cr3.jpeg" alt="Nike CR3"><span>Nike CR3</span></article>
+                    <article class="circular-card"><img src="img1.jpg" alt="Nike Concept 01"><span>Concept 01</span></article>
+                    <article class="circular-card"><img src="img2.jpg" alt="Nike Concept 02"><span>Concept 02</span></article>
+                    <article class="circular-card"><img src="img3.jpg" alt="Nike Concept 03"><span>Concept 03</span></article>
+                    <article class="circular-card"><img src="img4.jpg" alt="Nike Concept 04"><span>Concept 04</span></article>
+                    <article class="circular-card"><img src="img5.jpg" alt="Nike Concept 05"><span>Concept 05</span></article>
+                </div>
+                <p class="circular-hint">DRAG LEFT / RIGHT</p>
+            </div>
+        </section>
+
+        <!-- SECTION 6: OUR TEAM (LANYARD) -->
+        <section id="teamSection" class="section6 team-section">
+            <div class="team-shell">
+                <p class="team-kicker">OUR TEAM</p>
+                <h2 class="team-title">Meet The People Behind The Movement.</h2>
+                <p class="team-subtitle">Drag each profile card. It stretches and snaps back like a rubber lanyard.</p>
+
+                <div class="team-cards" id="teamLanyardStage">
+                    <div class="team-lanyard" data-anchor-x="20" data-anchor-y="8" data-rest="170">
+                        <span class="team-pin"></span>
+                        <span class="team-cord"></span>
+                        <article class="team-card">
+                            <p class="team-role">Creative Director</p>
+                            <h3 class="team-name">Kashish Arora</h3>
+                            <p class="team-bio">Shapes campaign language, visual direction, and premium storytelling across digital launches.</p>
+                            <p class="team-meta">NIKE // BRAND SYSTEMS</p>
+                        </article>
+                    </div>
+
+                    <div class="team-lanyard" data-anchor-x="50" data-anchor-y="6" data-rest="195">
+                        <span class="team-pin"></span>
+                        <span class="team-cord"></span>
+                        <article class="team-card">
+                            <p class="team-role">Motion Engineer</p>
+                            <h3 class="team-name">Kashish Arora</h3>
+                            <p class="team-bio">Builds tactile interactions and smooth animation systems that keep every experience responsive.</p>
+                            <p class="team-meta">NIKE // INTERACTION</p>
+                        </article>
+                    </div>
+
+                    <div class="team-lanyard" data-anchor-x="80" data-anchor-y="8" data-rest="178">
+                        <span class="team-pin"></span>
+                        <span class="team-cord"></span>
+                        <article class="team-card">
+                            <p class="team-role">Product Designer</p>
+                            <h3 class="team-name">Kashish Arora</h3>
+                            <p class="team-bio">Designs product journeys that balance editorial style, conversion clarity, and mobile precision.</p>
+                            <p class="team-meta">NIKE // PRODUCT UX</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: LIQUID DISTORTION FOOTER -->
+        <footer class="section6 liquid-footer" id="liquidFooter">
+            <canvas id="liquidFooterCanvas" aria-hidden="true"></canvas>
+            <div class="liquid-footer-content">
+                <h2 class="liquid-footer-title">Because why list when you can play?</h2>
+            </div>
+
+            <div class="footer-physics-stage" id="footerPhysicsStage" aria-label="Interactive physics footer">
+                <div class="physics-pill">HTML</div>
+                <div class="physics-pill">CSS</div>
+                <div class="physics-pill">ScrollTrigger</div>
+                <div class="physics-pill">GSAP</div>
+                <div class="physics-pill">JavaScript</div>
+                <div class="physics-pill">React</div>
+                <div class="physics-pill">Lens</div>
+                <div class="physics-pill">Next.js</div>
+                <div class="physics-pill">WebGL</div>
+            </div>
+        </footer>
+    </div>
+    <div id="customCursor" aria-hidden="true"></div>
+    <div id="cursorTrail" aria-hidden="true"></div>
+    <!-- GSAP -->
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+    <!-- Lenis -->
+    <script src="https://unpkg.com/lenis@1.3.17/dist/lenis.min.js"></script>
+
+    <!-- Three.js -->
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -103,6 +103,8 @@ function resize() {
 window.addEventListener("resize", resize); resize();
 
 let drawing = false, last = null;
+let checkQueued = false;
+let clearedOnce = false;
 const scratchMove = (e) => {
   if (!drawing || !canvas) return;
   if (e.cancelable) e.preventDefault();
@@ -112,15 +114,24 @@ const scratchMove = (e) => {
   ctx.globalCompositeOperation = "destination-out"; ctx.beginPath();
   if (last) { ctx.moveTo(last.x, last.y); ctx.lineTo(x, y); ctx.lineWidth = 140; ctx.lineCap = "round"; ctx.stroke(); }
   else { ctx.arc(x, y, 70, 0, Math.PI * 2); ctx.fill(); }
-  last = { x, y }; if (Math.random() > 0.9) check();
+  last = { x, y };
+
+  // Throttle expensive pixel checks and avoid random early completion.
+  if (!checkQueued) {
+    checkQueued = true;
+    requestAnimationFrame(() => {
+      checkQueued = false;
+      check();
+    });
+  }
 };
 if (canvas) {
   canvas.addEventListener("mousedown", (e) => { drawing = true; last = null; scratchMove(e); });
-  window.addEventListener("mouseup", () => drawing = false);
+  window.addEventListener("mouseup", () => { drawing = false; check(); });
   canvas.addEventListener("mousemove", scratchMove);
   canvas.addEventListener("touchstart", (e) => { drawing = true; last = null; scratchMove(e); }, { passive: false });
   canvas.addEventListener("touchmove", scratchMove, { passive: false });
-  window.addEventListener("touchend", () => drawing = false);
+  window.addEventListener("touchend", () => { drawing = false; check(); });
 }
 
 function startMainScrollExperience() {
@@ -149,10 +160,12 @@ function skipScratchIntro() {
   gsap.to(".hint", { opacity: 0, duration: 0.4 });
 }
 function check() {
-  if (!canvas) return;
+  if (!canvas || clearedOnce) return;
   const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
   let cl = 0; for (let i = 3; i < data.length; i += 4) if (data[i] === 0) cl++;
-  if ((cl / (canvas.width * canvas.height)) > 0.45) {
+  // Require a clear majority before auto-complete.
+  if ((cl / (canvas.width * canvas.height)) > 0.72) {
+    clearedOnce = true;
     gsap.to(canvas, {
       opacity: 0, duration: 2, onComplete: () => {
         canvas.remove();
@@ -176,28 +189,27 @@ function initSection2Timeline() {
 
   console.log("Section 2 element:", section2);
 
-  // Create one scroll trigger for smooth text reveal
+  // Line-by-line reveal tied to scroll progress.
   const lines = gsap.utils.toArray(".reveal-line > span");
-  
-  gsap.to(lines, {
+  gsap.set(lines, { yPercent: 110, opacity: 0, filter: "blur(8px)" });
+
+  const linesTl = gsap.timeline({
     scrollTrigger: {
       trigger: ".editorial-text",
-      start: "top 70%",
-      end: "bottom 10%",
-      scrub: 1,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        lines.forEach((line, index) => {
-          // Calculate staggered progress for each line
-          const lineProgress = Math.max(0, Math.min(1, (progress - index * 0.1) / 0.9));
-          gsap.set(line, {
-            yPercent: gsap.utils.mapRange(0, 1, 100, 0, lineProgress),
-            opacity: lineProgress
-          });
-        });
-      }
-    },
-    duration: 0
+      start: "top 72%",
+      end: "bottom 18%",
+      scrub: 1.1
+    }
+  });
+
+  lines.forEach((line) => {
+    linesTl.to(line, {
+      yPercent: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      duration: 0.9,
+      ease: "none"
+    }, "+=0.12");
   });
 
   gsap.fromTo(".tilt-frame",

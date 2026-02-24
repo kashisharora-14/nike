@@ -20,6 +20,29 @@ gsap.ticker.add((time) => {
 });
 gsap.ticker.lagSmoothing(0);
 
+// Smooth anchor scrolling for nav links with Lenis.
+function initSmoothNavScroll() {
+  const links = document.querySelectorAll('.nav-link[href^="#"]');
+  if (!links.length) return;
+
+  links.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const href = link.getAttribute("href");
+      if (!href || href === "#") return;
+      const target = document.querySelector(href);
+      if (!target) return;
+
+      event.preventDefault();
+      lenis.scrollTo(target, {
+        offset: -12,
+        duration: 1.35,
+        easing: (t) => 1 - Math.pow(1 - t, 3)
+      });
+      history.replaceState(null, "", href);
+    });
+  });
+}
+
 // ================= SPLASH =================
 const introVideo = document.getElementById("introVideo");
 const splash = document.getElementById("splash");
@@ -191,6 +214,9 @@ function initSection2Timeline() {
 
   // Line-by-line reveal tied to scroll progress.
   const lines = gsap.utils.toArray(".reveal-line > span");
+  const accentWord = document.querySelector(".accent");
+  const boldWord = document.querySelector(".highlight.bold");
+  const riskRing = document.querySelector(".red-circle");
   gsap.set(lines, { yPercent: 110, opacity: 0, filter: "blur(8px)" });
 
   const linesTl = gsap.timeline({
@@ -212,6 +238,51 @@ function initSection2Timeline() {
     }, "+=0.12");
   });
 
+  if (boldWord) {
+    gsap.fromTo(boldWord,
+      { textShadow: "0 0 0 rgba(255,255,255,0)", filter: "brightness(1)" },
+      {
+        textShadow: "0 0 22px rgba(255,255,255,0.45)",
+        filter: "brightness(1.15)",
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".section2",
+          start: "top 72%",
+          end: "top 28%",
+          scrub: 1
+        }
+      }
+    );
+  }
+
+  if (accentWord) {
+    gsap.fromTo(accentWord,
+      { x: 0, skewX: 0, opacity: 0.75 },
+      {
+        x: 10,
+        skewX: -6,
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".section2",
+          start: "top 70%",
+          end: "top 30%",
+          scrub: 1
+        }
+      }
+    );
+  }
+
+  if (riskRing) {
+    gsap.to(riskRing, {
+      boxShadow: "0 0 22px rgba(255,0,0,0.45)",
+      duration: 1.4,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
+  }
+
   gsap.fromTo(".tilt-frame",
     { scale: 0.8, opacity: 0 },
     {
@@ -224,6 +295,23 @@ function initSection2Timeline() {
         start: "top 60%",
         end: "top 30%",
         scrub: 2,
+      }
+    }
+  );
+
+  gsap.fromTo(".tilt-img",
+    { y: 26, scale: 0.94, rotateZ: -1.8, filter: "saturate(0.9) brightness(0.95)" },
+    {
+      y: -8,
+      scale: 1.02,
+      rotateZ: 0.6,
+      filter: "saturate(1.06) brightness(1.04)",
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".section2",
+        start: "top 72%",
+        end: "bottom 38%",
+        scrub: 1.3
       }
     }
   );
@@ -286,6 +374,8 @@ function initTiltEffect() {
   const frame = document.querySelector(".tilt-frame");
   const img = document.querySelector(".tilt-img");
   if (!frame || !img) return;
+  if (frame.dataset.tiltBound === "true") return;
+  frame.dataset.tiltBound = "true";
 
   frame.addEventListener("mousemove", (e) => {
     const { left, top, width, height } = frame.getBoundingClientRect();
@@ -307,6 +397,8 @@ check = function () {
   originalCheck();
   initTiltEffect();
 };
+
+initSmoothNavScroll();
 // ================= SECTION 3: IMAGE SEQUENCE ANIMATION (CANVAS + SCROLLTRIGGER) =================
 
 class ImageSequenceAnimation {
@@ -586,6 +678,65 @@ function initInfiniteScroller() {
 setTimeout(() => {
   initInfiniteScroller();
 }, 1000);
+
+// ================= SECTION 3A: MANIFESTO TEXT =================
+function initManifestoSection() {
+  const section = document.getElementById("manifestoSection");
+  if (!section) return;
+
+  const lines = gsap.utils.toArray(".manifesto-line");
+  const copy = section.querySelector(".manifesto-copy");
+  const tags = gsap.utils.toArray(".manifesto-tag");
+
+  gsap.set(lines, { yPercent: 115, opacity: 0, filter: "blur(10px)" });
+  if (copy) gsap.set(copy, { y: 30, opacity: 0 });
+  gsap.set(tags, { y: 20, opacity: 0 });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: "top 74%",
+      end: "bottom 42%",
+      scrub: 1
+    }
+  });
+
+  lines.forEach((line) => {
+    tl.to(line, {
+      yPercent: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      duration: 0.8,
+      ease: "none"
+    }, "+=0.1");
+  });
+
+  if (copy) {
+    tl.to(copy, { y: 0, opacity: 1, duration: 0.7, ease: "none" }, "-=0.2");
+  }
+
+  tl.to(tags, {
+    y: 0,
+    opacity: 1,
+    stagger: 0.08,
+    duration: 0.5,
+    ease: "none"
+  }, "-=0.15");
+
+  tags.forEach((tag, i) => {
+    gsap.to(tag, {
+      y: i % 2 === 0 ? -4 : 4,
+      duration: 1.6 + i * 0.12,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut"
+    });
+  });
+}
+
+setTimeout(() => {
+  initManifestoSection();
+}, 850);
 
 // ================= SECTION 4: HORIZONTAL SHOE GALLERY =================
 function initShoeGallery() {

@@ -493,6 +493,104 @@ body {
   }
 }
 
+/* ================= SECTION 3A (MANIFESTO COPY) ================= */
+.section3a.manifesto-section {
+  position: relative;
+  width: 100vw;
+  min-height: 88vh;
+  background:
+    radial-gradient(circle at 18% 28%, rgba(255, 0, 0, 0.08), transparent 46%),
+    radial-gradient(circle at 82% 72%, rgba(255, 255, 255, 0.04), transparent 42%),
+    #040404;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 0, 0, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 101;
+  overflow: hidden;
+}
+
+.manifesto-inner {
+  width: min(1100px, calc(100vw - 56px));
+  margin: 0 auto;
+}
+
+.manifesto-kicker {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.58);
+  letter-spacing: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.manifesto-title {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  font-size: clamp(38px, 6vw, 92px);
+  line-height: 0.96;
+  letter-spacing: -2px;
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+}
+
+.manifesto-line {
+  display: block;
+  color: rgba(255, 255, 255, 0.96);
+  will-change: transform, opacity, filter;
+}
+
+.manifesto-copy {
+  margin: 26px 0 0;
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(16px, 1.7vw, 23px);
+  line-height: 1.45;
+  letter-spacing: 0.2px;
+}
+
+.manifesto-tags {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.manifesto-tag {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.88);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 8px 14px;
+  text-transform: uppercase;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 900px) {
+  .section3a.manifesto-section {
+    min-height: 72vh;
+  }
+
+  .manifesto-inner {
+    width: min(1100px, calc(100vw - 30px));
+  }
+
+  .manifesto-title {
+    letter-spacing: -1px;
+    line-height: 1.02;
+  }
+
+  .manifesto-copy {
+    font-size: clamp(15px, 3.8vw, 18px);
+    line-height: 1.5;
+  }
+}
+
 /* ================= SECTION 4 (SHOE GALLERY) ================= */
 .section4.shoe-gallery-section {
   position: relative;
@@ -627,6 +725,7 @@ body {
 }
 
 .explore-btn {
+  position: relative;
   margin-top: 20px;
   padding: 15px 40px;
   background: linear-gradient(135deg, #ff4444 0%, #ff6666 100%);
@@ -640,11 +739,57 @@ body {
   text-transform: uppercase;
   transition: all 0.3s ease;
   align-self: flex-start;
+  overflow: visible;
 }
 
 .explore-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 20px 40px rgba(255, 68, 68, 0.4);
+}
+
+.explore-btn::before,
+.explore-btn::after {
+  content: "";
+  position: absolute;
+  top: -18px;
+  width: 2px;
+  height: 16px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.1));
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.explore-btn::before {
+  left: calc(50% - 12px);
+  animation: laceSway 2.3s ease-in-out infinite;
+}
+
+.explore-btn::after {
+  left: calc(50% + 10px);
+  animation: laceSway 2.3s ease-in-out infinite 0.2s;
+}
+
+.explore-btn .lace-tip {
+  position: absolute;
+  top: -6px;
+  width: 8px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+
+.explore-btn .lace-tip.left {
+  left: calc(50% - 16px);
+}
+
+.explore-btn .lace-tip.right {
+  left: calc(50% + 6px);
+}
+
+@keyframes laceSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(7deg); }
 }
 
 .gallery-carousel {

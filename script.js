@@ -407,7 +407,7 @@ class ImageSequenceAnimation {
     this.ctx = this.canvas ? this.canvas.getContext("2d", { willReadFrequently: false }) : null;
     this.images = [];
     this.currentFrame = 0;
-    this.totalFrames = 100; // 0001-0100 = 100 frames
+    this.totalFrames = 100; // 001-100 = 100 frames
     this.isLoading = true;
     this.dpr = window.devicePixelRatio || 1;
     this.renderScheduled = false;
@@ -452,11 +452,11 @@ class ImageSequenceAnimation {
     try {
       const imagePromises = [];
       for (let i = 1; i <= this.totalFrames; i++) {
-        const frameNum = String(i).padStart(4, "0"); // 0001, 0002, ..., 0100
+        const frameNum = String(i).padStart(3, "0"); // 001, 002, ..., 100
         imagePromises.push(
-          this.loadImage(`images/${frameNum}.jpg`).catch(error => {
+          this.loadImage(`image/img/${frameNum}.png`).catch(error => {
             this.failedImages.push(frameNum);
-            console.warn(`⚠️  Failed to load: images/${frameNum}.jpg`);
+            console.warn(`⚠️  Failed to load: image/img/${frameNum}.png`);
             return null;
           })
         );
@@ -754,100 +754,40 @@ function initShoeGallery() {
   if (!galleryTrack || !galleryCarousel || shoeItems.length === 0) return;
 
   gsap.registerPlugin(ScrollTrigger);
+  gsap.set(galleryTrack, { xPercent: 0, opacity: 1 });
+  gsap.set(shoeItems, { opacity: 1 });
+  gsap.set([leftInfo, rightInfo], { opacity: 1 });
 
-  // Velocity-based skew effect while scrolling.
-  let proxy = {
-      skew: 0,
-      skewSetter(value) { this.skew = value; },
-      skewGetter() { return this.skew; },
-      onUpdate() { gsap.set(galleryTrack, { skewY: this.skew }); }
-    },
-    clamp = gsap.utils.clamp(-20, 20);
+  const slideCount = shoeItems.length;
+  const maxShift = -100 * (slideCount - 1);
 
-  // Compute exact x needed to center a target shoe in the carousel viewport.
-  const getTargetX = (item) => {
-    const prevX = Number(gsap.getProperty(galleryTrack, "x")) || 0;
-    gsap.set(galleryTrack, { x: 0 });
-
-    const carouselRect = galleryCarousel.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-
-    const carouselCenter = carouselRect.left + carouselRect.width / 2;
-    const itemCenter = itemRect.left + itemRect.width / 2;
-    const targetX = carouselCenter - itemCenter;
-
-    gsap.set(galleryTrack, { x: prevX });
-    return targetX;
-  };
-
-  const shoeImgs = Array.from(shoeItems)
-    .map((item) => item.querySelector("img"))
-    .filter(Boolean);
-
-  const imagesLoaded = (imgs) => Promise.all(
-    imgs.map((img) => {
-      if (img.complete && img.naturalWidth) return Promise.resolve();
-      return new Promise((resolve) => {
-        img.addEventListener("load", resolve, { once: true });
-        img.addEventListener("error", resolve, { once: true });
-      });
-    })
-  );
-
-  imagesLoaded(shoeImgs).then(() => {
-    const setFirstShoePosition = () => {
-      gsap.set(galleryTrack, { x: getTargetX(shoeItems[0]) });
-    };
-
-    // Force CR1 centered before any ScrollTrigger progress is applied.
-    setFirstShoePosition();
-
-    gsap.to(galleryTrack, {
-      scrollTrigger: {
-        trigger: ".section4",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1,
-        pin: ".gallery-wrapper",
-        onUpdate: (self) => {
-          const skew = clamp(self.getVelocity() / -300);
-          proxy.skewSetter(skew);
-          gsap.to(proxy, { skewGetter: proxy.skewGetter, skew: 0, duration: 0.8, ease: "power3" });
-        },
-      },
-      skewY: 0,
-      ease: "power1.inOut",
-    });
-
-    gsap.fromTo(galleryTrack, {
-      x: () => getTargetX(shoeItems[0]),
-    }, {
-      x: () => getTargetX(shoeItems[shoeItems.length - 1]),
-      scrollTrigger: {
-        trigger: ".section4",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1.2,
-        invalidateOnRefresh: true,
-        onRefreshInit: () => setFirstShoePosition(),
-        onUpdate: (self) => updateShoeInfo(self.progress),
-      },
-      ease: "none",
-      immediateRender: true,
-    });
-
-    gsap.set([leftInfo, rightInfo], { opacity: 1 });
-    updateShoeInfo(0);
-
-    console.log("Shoe gallery initialized");
+  // Simple, stable horizontal slider tied to section scroll.
+  gsap.fromTo(galleryTrack, {
+    xPercent: 0
+  }, {
+    xPercent: maxShift,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".section4",
+      start: "top top",
+      end: "bottom bottom",
+      pin: ".gallery-wrapper",
+      scrub: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => updateShoeInfo(self.progress),
+    }
   });
+
+  updateShoeInfo(0);
+  ScrollTrigger.refresh();
+  console.log("Shoe gallery initialized");
 
   // Update shoe info based on scroll progress.
   function updateShoeInfo(progress) {
     const shoeIndex = gsap.utils.clamp(
       0,
       shoeItems.length - 1,
-      Math.floor(progress * shoeItems.length)
+      Math.round(progress * (shoeItems.length - 1))
     );
 
     const shoe = shoeItems[shoeIndex];
@@ -856,13 +796,13 @@ function initShoeGallery() {
     const shoeName = shoe.dataset.shoe;
     const tagline = shoe.dataset.tagline;
     const desc = shoe.dataset.desc;
-    const price = (119.99 + shoeIndex * 10).toFixed(2);
+    const inrPrice = 2599 + shoeIndex * 300;
 
     shoeNameEl.textContent = shoeName;
     shoeTaglineEl.textContent = tagline;
     shoeDescEl.textContent = desc;
     shoeNumberEl.textContent = `0${shoeIndex + 1} / 0${shoeItems.length}`;
-    shoePriceEl.textContent = `$${price}`;
+    shoePriceEl.textContent = `₹${inrPrice.toLocaleString("en-IN")}`;
   }
 }
 // Initialize shoe gallery
